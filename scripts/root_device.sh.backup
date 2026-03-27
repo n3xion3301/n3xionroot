@@ -36,39 +36,27 @@ detect_device() {
 
 check_support() {
     case "$DEVICE_CODE" in
-        # Samsung devices
+        # Samsung
         "beyond1lte"|"beyond0lte"|"beyond2lte")
             EXPLOIT_PATH="../exploits/samsung/galaxy_s10/root.sh"
             DEVICE_NAME="Samsung Galaxy S10"
             ;;
-        "x1s")
-            EXPLOIT_PATH="../exploits/samsung/galaxy_s20/root.sh"
-            DEVICE_NAME="Samsung Galaxy S20"
-            ;;
-        # Google Pixel devices
+        # Google
         "sunfish")
             EXPLOIT_PATH="../exploits/google/pixel_4a/root.sh"
             DEVICE_NAME="Google Pixel 4a"
             ;;
-        "redfin")
-            EXPLOIT_PATH="../exploits/google/pixel_5/root.sh"
-            DEVICE_NAME="Google Pixel 5"
-            ;;
-        # Xiaomi devices
-        "mojito")
-            EXPLOIT_PATH="../exploits/xiaomi/redmi_note_10/root.sh"
-            DEVICE_NAME="Xiaomi Redmi Note 10"
-            ;;
-        "alioth")
-            EXPLOIT_PATH="../exploits/xiaomi/poco_f3/root.sh"
-            DEVICE_NAME="Xiaomi Poco F3"
-            ;;
-        # OnePlus devices
+        # OnePlus
         "guacamole")
             EXPLOIT_PATH="../exploits/oneplus/oneplus_7_pro/root.sh"
             DEVICE_NAME="OnePlus 7 Pro"
             ;;
-        # Motorola devices
+        # Xiaomi
+        "mojito")
+            EXPLOIT_PATH="../exploits/xiaomi/redmi_note_10/root.sh"
+            DEVICE_NAME="Xiaomi Redmi Note 10"
+            ;;
+        # Motorola
         "sofia")
             EXPLOIT_PATH="../exploits/motorola/moto_g_power/root.sh"
             DEVICE_NAME="Motorola Moto G Power"
@@ -76,19 +64,11 @@ check_support() {
         *)
             echo -e "${RED}[!]${NC} Device not supported: $DEVICE_CODE"
             echo "    Supported devices:"
-            echo "      Samsung:"
-            echo "        - Galaxy S10 series (beyond1lte/beyond0lte/beyond2lte)"
-            echo "        - Galaxy S20 (x1s)"
-            echo "      Google Pixel:"
-            echo "        - Pixel 4a (sunfish)"
-            echo "        - Pixel 5 (redfin)"
-            echo "      Xiaomi:"
-            echo "        - Redmi Note 10 (mojito)"
-            echo "        - Poco F3 (alioth)"
-            echo "      OnePlus:"
-            echo "        - 7 Pro (guacamole)"
-            echo "      Motorola:"
-            echo "        - Moto G Power (sofia)"
+            echo "      - Samsung Galaxy S10 series"
+            echo "      - Google Pixel 4a"
+            echo "      - OnePlus 7 Pro"
+            echo "      - Xiaomi Redmi Note 10"
+            echo "      - Motorola Moto G Power"
             echo ""
             echo "    See docs/supported-devices.md for full list"
             exit 1
