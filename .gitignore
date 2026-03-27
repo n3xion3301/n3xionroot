@@ -1,0 +1,28 @@
+# Firmware and images
+*.img
+*.bin
+*.zip
+*.tar
+*.md5
+
+# Sensitive data
+*.key
+*.pem
+credentials/
+secrets/
+
+# Build artifacts
+*.o
+*.so
+*.apk
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# IDE
+.vscode/
+.idea/
+*.iml
