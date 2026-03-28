@@ -61,20 +61,29 @@ check_support() {
             SUPPORTED=true; ROOT_METHOD="samsung_twrp"; DEVICE_NAME="Samsung Galaxy S10" ;;
         x1s)
             SUPPORTED=true; ROOT_METHOD="samsung_twrp"; DEVICE_NAME="Samsung Galaxy S20" ;;
+        o1s)
+            SUPPORTED=true; ROOT_METHOD="samsung_twrp"; DEVICE_NAME="Samsung Galaxy S21" ;;
         sunfish)
             SUPPORTED=true; ROOT_METHOD="google_magisk"; DEVICE_NAME="Google Pixel 4a" ;;
         redfin)
             SUPPORTED=true; ROOT_METHOD="google_magisk"; DEVICE_NAME="Google Pixel 5" ;;
+        oriole)
+            SUPPORTED=true; ROOT_METHOD="google_magisk"; DEVICE_NAME="Google Pixel 6" ;;
         mojito)
             SUPPORTED=true; ROOT_METHOD="xiaomi_twrp"; DEVICE_NAME="Xiaomi Redmi Note 10" ;;
         alioth)
             SUPPORTED=true; ROOT_METHOD="xiaomi_twrp"; DEVICE_NAME="Xiaomi Poco F3" ;;
+        venus)
+            SUPPORTED=true; ROOT_METHOD="xiaomi_twrp"; DEVICE_NAME="Xiaomi Mi 11" ;;
         guacamole)
             SUPPORTED=true; ROOT_METHOD="oneplus_twrp"; DEVICE_NAME="OnePlus 7 Pro" ;;
+        instantnoodle)
+            SUPPORTED=true; ROOT_METHOD="oneplus_twrp"; DEVICE_NAME="OnePlus 8" ;;
         sofia)
             SUPPORTED=true; ROOT_METHOD="motorola_magisk"; DEVICE_NAME="Motorola Moto G Power" ;;
         *)
             echo -e "${RED}[!]${NC} Device not supported: $DEVICE_CODE"
+            echo "    Supported: 12 devices total"
             exit 1 ;;
     esac
     echo -e "${GREEN}[✓]${NC} Device supported: $DEVICE_NAME"

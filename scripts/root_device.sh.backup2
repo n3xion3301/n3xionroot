@@ -36,62 +36,61 @@ detect_device() {
 
 check_support() {
     case "$DEVICE_CODE" in
-        beyond1lte|beyond0lte|beyond2lte)
+        # Samsung devices
+        "beyond1lte"|"beyond0lte"|"beyond2lte")
             EXPLOIT_PATH="../exploits/samsung/galaxy_s10/root.sh"
             DEVICE_NAME="Samsung Galaxy S10"
             ;;
-        x1s)
+        "x1s")
             EXPLOIT_PATH="../exploits/samsung/galaxy_s20/root.sh"
             DEVICE_NAME="Samsung Galaxy S20"
             ;;
-        o1s)
-            EXPLOIT_PATH="../exploits/samsung/galaxy_s21/root.sh"
-            DEVICE_NAME="Samsung Galaxy S21"
-            ;;
-        sunfish)
+        # Google Pixel devices
+        "sunfish")
             EXPLOIT_PATH="../exploits/google/pixel_4a/root.sh"
             DEVICE_NAME="Google Pixel 4a"
             ;;
-        redfin)
+        "redfin")
             EXPLOIT_PATH="../exploits/google/pixel_5/root.sh"
             DEVICE_NAME="Google Pixel 5"
             ;;
-        oriole)
-            EXPLOIT_PATH="../exploits/google/pixel_6/root.sh"
-            DEVICE_NAME="Google Pixel 6"
-            ;;
-        mojito)
+        # Xiaomi devices
+        "mojito")
             EXPLOIT_PATH="../exploits/xiaomi/redmi_note_10/root.sh"
             DEVICE_NAME="Xiaomi Redmi Note 10"
             ;;
-        alioth)
+        "alioth")
             EXPLOIT_PATH="../exploits/xiaomi/poco_f3/root.sh"
             DEVICE_NAME="Xiaomi Poco F3"
             ;;
-        venus)
-            EXPLOIT_PATH="../exploits/xiaomi/mi_11/root.sh"
-            DEVICE_NAME="Xiaomi Mi 11"
-            ;;
-        guacamole)
+        # OnePlus devices
+        "guacamole")
             EXPLOIT_PATH="../exploits/oneplus/oneplus_7_pro/root.sh"
             DEVICE_NAME="OnePlus 7 Pro"
             ;;
-        instantnoodle)
-            EXPLOIT_PATH="../exploits/oneplus/oneplus_8/root.sh"
-            DEVICE_NAME="OnePlus 8"
-            ;;
-        sofia)
+        # Motorola devices
+        "sofia")
             EXPLOIT_PATH="../exploits/motorola/moto_g_power/root.sh"
             DEVICE_NAME="Motorola Moto G Power"
             ;;
         *)
             echo -e "${RED}[!]${NC} Device not supported: $DEVICE_CODE"
-            echo "    Supported devices (12 total):"
-            echo "      Samsung: S10, S20, S21"
-            echo "      Google Pixel: 4a, 5, 6"
-            echo "      Xiaomi: Redmi Note 10, Poco F3, Mi 11"
-            echo "      OnePlus: 7 Pro, 8"
-            echo "      Motorola: Moto G Power"
+            echo "    Supported devices:"
+            echo "      Samsung:"
+            echo "        - Galaxy S10 series (beyond1lte/beyond0lte/beyond2lte)"
+            echo "        - Galaxy S20 (x1s)"
+            echo "      Google Pixel:"
+            echo "        - Pixel 4a (sunfish)"
+            echo "        - Pixel 5 (redfin)"
+            echo "      Xiaomi:"
+            echo "        - Redmi Note 10 (mojito)"
+            echo "        - Poco F3 (alioth)"
+            echo "      OnePlus:"
+            echo "        - 7 Pro (guacamole)"
+            echo "      Motorola:"
+            echo "        - Moto G Power (sofia)"
+            echo ""
+            echo "    See docs/supported-devices.md for full list"
             exit 1
             ;;
     esac
