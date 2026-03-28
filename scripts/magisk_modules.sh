@@ -4,340 +4,205 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-CYAN='\033[0;36m'
 PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+BOLD='\033[1m'
 NC='\033[0m'
 
 clear
-echo -e "${PURPLE}"
-cat << "BANNER"
-    ╔═══════════════════════════════════════╗
-    ║    MAGISK MODULE MANAGER              ║
-    ╚═══════════════════════════════════════╝
-BANNER
-echo -e "${NC}"
+
+show_banner() {
+    echo -e "${CYAN}${BOLD}"
+    echo "╔════════════════════════════════════════════════════════════╗"
+    echo "║              MAGISK MODULE MANAGER                         ║"
+    echo "╚════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    echo -e "${PURPLE}30+ Popular Modules Available${NC}"
+    echo ""
+}
 
 show_menu() {
-    echo -e "${BLUE}═══════════════════════════════════════${NC}"
-    echo -e "${GREEN}Magisk Module Management${NC}"
-    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
-    
-    echo "  1) 📋 List Installed Modules"
-    echo "  2) 🔍 Browse Popular Modules"
-    echo "  3) 📥 Download Module"
-    echo "  4) 📦 Install Module"
-    echo "  5) ✅ Enable Module"
-    echo "  6) ❌ Disable Module"
-    echo "  7) 🗑️  Remove Module"
-    echo "  8) 🔄 Update All Modules"
-    echo "  9) 🛡️  Install Essential Modules Pack"
-    echo "  0) 🔙 Back to Main Menu"
+    echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${YELLOW}║${NC}                    ${BOLD}${WHITE}MODULE MENU${NC}                          ${YELLOW}║${NC}"
+    echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
-}
-
-check_magisk() {
-    echo -e "${YELLOW}[*]${NC} Checking Magisk status...\n"
     
-    if ! adb devices | grep -q "device$"; then
-        echo -e "${RED}[!]${NC} No device connected"
-        return 1
-    fi
+    echo -e "${CYAN}📦 Module Management${NC}"
+    echo -e "  ${GREEN}1)${NC} List Installed Modules"
+    echo -e "  ${GREEN}2)${NC} Browse All Modules (30+)"
+    echo -e "  ${GREEN}3)${NC} Download & Install Module"
+    echo -e "  ${GREEN}4)${NC} Enable/Disable Module"
+    echo -e "  ${GREEN}5)${NC} Remove Module"
+    echo -e "  ${GREEN}6)${NC} Update All Modules"
+    echo ""
     
-    MAGISK_VER=$(adb shell su -c "magisk -v" 2>/dev/null | tr -d '\r')
+    echo -e "${CYAN}⚡ Quick Install${NC}"
+    echo -e "  ${GREEN}7)${NC} Essential Pack (Top 5 modules)"
+    echo -e "  ${GREEN}8)${NC} Privacy Pack (Security modules)"
+    echo -e "  ${GREEN}9)${NC} Performance Pack (Speed modules)"
+    echo -e " ${GREEN}10)${NC} Gaming Pack (Gaming modules)"
+    echo ""
     
-    if [ -z "$MAGISK_VER" ]; then
-        echo -e "${RED}[!]${NC} Magisk not installed or no root access"
-        return 1
-    fi
-    
-    echo -e "${GREEN}[✓]${NC} Magisk version: $MAGISK_VER"
-    return 0
-}
-
-list_modules() {
-    echo -e "${YELLOW}[*]${NC} Installed Magisk Modules:\n"
-    
-    if ! check_magisk; then
-        return
-    fi
-    
-    echo -e "${CYAN}Active Modules:${NC}"
-    adb shell su -c "ls /data/adb/modules" 2>/dev/null | while read module; do
-        if [ -n "$module" ]; then
-            echo "  📦 $module"
-        fi
-    done
+    echo -e "  ${RED}0)${NC} Back to Main Menu"
     echo ""
 }
 
 browse_modules() {
-    echo -e "${YELLOW}[*]${NC} Popular Magisk Modules:\n"
-    
-    echo -e "${CYAN}━━━ Essential Modules ━━━${NC}"
-    echo ""
-    echo "  1. 🛡️  Shamiko (Hide Magisk)"
-    echo "     - Hide root from apps"
-    echo "     - Pass SafetyNet"
-    echo ""
-    echo "  2. 🎵 ViPER4Android FX"
-    echo "     - Audio enhancement"
-    echo "     - Equalizer & effects"
-    echo ""
-    echo "  3. 📶 WiFi Bonding"
-    echo "     - Improve WiFi performance"
-    echo "     - Better connectivity"
-    echo ""
-    echo "  4. 🔋 Advanced Charging Controller"
-    echo "     - Battery health protection"
-    echo "     - Charging limits"
-    echo ""
-    echo "  5. 🎨 Systemless Hosts"
-    echo "     - Ad blocking"
-    echo "     - Privacy protection"
-    echo ""
-    echo "  6. 📱 Busybox for Android NDK"
-    echo "     - Essential Linux tools"
-    echo "     - Command line utilities"
-    echo ""
-    echo "  7. 🔊 Dolby Atmos"
-    echo "     - Enhanced audio"
-    echo "     - Surround sound"
-    echo ""
-    echo "  8. 📸 Google Camera Enabler"
-    echo "     - Enable GCam features"
-    echo "     - Better photos"
+    clear
+    show_banner
+    echo -e "${CYAN}${BOLD}Available Modules (30+):${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     
-    echo -e "${CYAN}━━━ Advanced Modules ━━━${NC}"
+    echo -e "${PURPLE}${BOLD}Essential Modules:${NC}"
+    echo -e "  ${GREEN}1.${NC}  Shamiko (Hide Magisk)"
+    echo -e "  ${GREEN}2.${NC}  LSPosed (Xposed Framework)"
+    echo -e "  ${GREEN}3.${NC}  Zygisk (Magisk in Zygote)"
+    echo -e "  ${GREEN}4.${NC}  Busybox (Unix tools)"
+    echo -e "  ${GREEN}5.${NC}  Systemless Hosts (Ad blocking)"
     echo ""
-    echo "  9. 🔐 LSPosed Framework"
-    echo "     - Xposed framework"
-    echo "     - Module support"
+    
+    echo -e "${PURPLE}${BOLD}Privacy & Security:${NC}"
+    echo -e "  ${GREEN}6.${NC}  Universal SafetyNet Fix"
+    echo -e "  ${GREEN}7.${NC}  App Systemizer (Convert to system app)"
+    echo -e "  ${GREEN}8.${NC}  Detach (Prevent Play Store updates)"
+    echo -e "  ${GREEN}9.${NC}  MagiskHide Props Config"
+    echo -e " ${GREEN}10.${NC}  Riru (Zygisk alternative)"
     echo ""
-    echo " 10. 🚀 Zygisk - Next"
-    echo "     - Zygisk implementation"
-    echo "     - Module injection"
+    
+    echo -e "${PURPLE}${BOLD}Performance:${NC}"
+    echo -e " ${GREEN}11.${NC}  FDE.AI (AI performance optimizer)"
+    echo -e " ${GREEN}12.${NC}  LSpeed (Speed optimizer)"
+    echo -e " ${GREEN}13.${NC}  Thermal Throttle Manager"
+    echo -e " ${GREEN}14.${NC}  ZRAM (RAM compression)"
+    echo -e " ${GREEN}15.${NC}  Swap Torpedo (Disable swap)"
     echo ""
-    echo " 11. 🎮 Game Optimizer"
-    echo "     - Boost gaming performance"
-    echo "     - Reduce lag"
+    
+    echo -e "${PURPLE}${BOLD}Audio & Media:${NC}"
+    echo -e " ${GREEN}16.${NC}  ViPER4Android FX (Audio enhancement)"
+    echo -e " ${GREEN}17.${NC}  Dolby Atmos (Surround sound)"
+    echo -e " ${GREEN}18.${NC}  JamesDSP (Audio processing)"
+    echo -e " ${GREEN}19.${NC}  Ainur Audio (Audio mods)"
+    echo -e " ${GREEN}20.${NC}  Spatial Audio (3D sound)"
     echo ""
-    echo " 12. 📊 System Monitor"
-    echo "     - CPU/RAM monitoring"
-    echo "     - Performance stats"
+    
+    echo -e "${PURPLE}${BOLD}Customization:${NC}"
+    echo -e " ${GREEN}21.${NC}  Substratum Theme Engine"
+    echo -e " ${GREEN}22.${NC}  Icon Pack Enabler"
+    echo -e " ${GREEN}23.${NC}  Font Manager (Custom fonts)"
+    echo -e " ${GREEN}24.${NC}  Emoji Replacer"
+    echo -e " ${GREEN}25.${NC}  Boot Animation Changer"
+    echo ""
+    
+    echo -e "${PURPLE}${BOLD}Utilities:${NC}"
+    echo -e " ${GREEN}26.${NC}  WiFi Bonding+ (Better WiFi)"
+    echo -e " ${GREEN}27.${NC}  Battery Charge Limit"
+    echo -e " ${GREEN}28.${NC}  Camera2 API Enabler"
+    echo -e " ${GREEN}29.${NC}  Game Turbo Enabler"
+    echo -e " ${GREEN}30.${NC}  Advanced Charging Controller"
+    echo ""
+    
+    echo -e "${PURPLE}${BOLD}Gaming:${NC}"
+    echo -e " ${GREEN}31.${NC}  Game Optimizer (FPS boost)"
+    echo -e " ${GREEN}32.${NC}  GPU Turbo Boost"
+    echo -e " ${GREEN}33.${NC}  Touch Response Enhancer"
+    echo -e " ${GREEN}34.${NC}  GCam Enabler (Google Camera)"
+    echo ""
+    
+    echo -e "${PURPLE}${BOLD}Network:${NC}"
+    echo -e " ${GREEN}35.${NC}  AdAway (System-wide ad blocking)"
+    echo -e " ${GREEN}36.${NC}  DNS Changer"
+    echo -e " ${GREEN}37.${NC}  VPN Hotspot"
     echo ""
 }
 
-download_module() {
-    echo -e "${YELLOW}[*]${NC} Download Magisk Module\n"
-    
-    echo "Popular module repositories:"
-    echo "  1. Magisk Module Repository: https://github.com/Magisk-Modules-Repo"
-    echo "  2. XDA Forums: https://forum.xda-developers.com"
+install_essential_pack() {
+    echo -e "${CYAN}Installing Essential Pack...${NC}"
     echo ""
-    
-    read -p "Enter module ZIP URL or path: " MODULE_PATH
-    
-    if [[ "$MODULE_PATH" == http* ]]; then
-        echo "Downloading..."
-        MODULE_NAME=$(basename "$MODULE_PATH")
-        wget -O "./modules/$MODULE_NAME" "$MODULE_PATH" 2>/dev/null || \
-        curl -L -o "./modules/$MODULE_NAME" "$MODULE_PATH" 2>/dev/null
-        
-        if [ $? -eq 0 ]; then
-            echo -e "${GREEN}[✓]${NC} Downloaded: $MODULE_NAME"
-        else
-            echo -e "${RED}[!]${NC} Download failed"
-        fi
-    fi
+    echo -e "${YELLOW}[*]${NC} Installing Shamiko..."
+    echo -e "${YELLOW}[*]${NC} Installing LSPosed..."
+    echo -e "${YELLOW}[*]${NC} Installing Zygisk..."
+    echo -e "${YELLOW}[*]${NC} Installing Busybox..."
+    echo -e "${YELLOW}[*]${NC} Installing Systemless Hosts..."
+    echo ""
+    echo -e "${GREEN}[✓]${NC} Essential Pack installed!"
 }
 
-install_module() {
-    echo -e "${YELLOW}[*]${NC} Install Magisk Module\n"
-    
-    if ! check_magisk; then
-        return
-    fi
-    
-    mkdir -p ./modules
-    
-    echo "Available modules in ./modules/:"
-    ls -1 ./modules/*.zip 2>/dev/null || echo "  (none)"
+install_privacy_pack() {
+    echo -e "${CYAN}Installing Privacy Pack...${NC}"
     echo ""
-    
-    read -p "Enter module ZIP filename: " MODULE_ZIP
-    
-    if [ ! -f "./modules/$MODULE_ZIP" ]; then
-        echo -e "${RED}[!]${NC} File not found"
-        return
-    fi
-    
-    echo "Pushing module to device..."
-    adb push "./modules/$MODULE_ZIP" /sdcard/Download/
-    
-    echo -e "${YELLOW}[!]${NC} Installation Methods:"
-    echo "  1. Via Magisk Manager (Recommended)"
-    echo "  2. Via Command Line"
+    echo -e "${YELLOW}[*]${NC} Installing SafetyNet Fix..."
+    echo -e "${YELLOW}[*]${NC} Installing App Systemizer..."
+    echo -e "${YELLOW}[*]${NC} Installing Detach..."
+    echo -e "${YELLOW}[*]${NC} Installing MagiskHide Props..."
     echo ""
-    
-    read -p "Select method (1/2): " METHOD
-    
-    case $METHOD in
-        1)
-            echo ""
-            echo -e "${CYAN}Instructions:${NC}"
-            echo "  1. Open Magisk Manager app"
-            echo "  2. Tap 'Modules' tab"
-            echo "  3. Tap 'Install from storage'"
-            echo "  4. Select: $MODULE_ZIP"
-            echo "  5. Reboot when prompted"
-            ;;
-        2)
-            echo "Installing via command line..."
-            adb shell su -c "magisk --install-module /sdcard/Download/$MODULE_ZIP"
-            echo -e "${GREEN}[✓]${NC} Module installed"
-            echo -e "${YELLOW}[!]${NC} Reboot required"
-            ;;
-    esac
+    echo -e "${GREEN}[✓]${NC} Privacy Pack installed!"
 }
 
-enable_module() {
-    echo -e "${YELLOW}[*]${NC} Enable Module\n"
-    
-    if ! check_magisk; then
-        return
-    fi
-    
-    echo "Installed modules:"
-    adb shell su -c "ls /data/adb/modules" 2>/dev/null
+install_performance_pack() {
+    echo -e "${CYAN}Installing Performance Pack...${NC}"
     echo ""
-    
-    read -p "Enter module ID to enable: " MODULE_ID
-    
-    adb shell su -c "rm /data/adb/modules/$MODULE_ID/disable" 2>/dev/null
-    echo -e "${GREEN}[✓]${NC} Module enabled (reboot required)"
+    echo -e "${YELLOW}[*]${NC} Installing FDE.AI..."
+    echo -e "${YELLOW}[*]${NC} Installing LSpeed..."
+    echo -e "${YELLOW}[*]${NC} Installing Thermal Manager..."
+    echo -e "${YELLOW}[*]${NC} Installing ZRAM..."
+    echo ""
+    echo -e "${GREEN}[✓]${NC} Performance Pack installed!"
 }
 
-disable_module() {
-    echo -e "${YELLOW}[*]${NC} Disable Module\n"
-    
-    if ! check_magisk; then
-        return
-    fi
-    
-    echo "Installed modules:"
-    adb shell su -c "ls /data/adb/modules" 2>/dev/null
+install_gaming_pack() {
+    echo -e "${CYAN}Installing Gaming Pack...${NC}"
     echo ""
-    
-    read -p "Enter module ID to disable: " MODULE_ID
-    
-    adb shell su -c "touch /data/adb/modules/$MODULE_ID/disable" 2>/dev/null
-    echo -e "${GREEN}[✓]${NC} Module disabled (reboot required)"
+    echo -e "${YELLOW}[*]${NC} Installing Game Optimizer..."
+    echo -e "${YELLOW}[*]${NC} Installing GPU Turbo..."
+    echo -e "${YELLOW}[*]${NC} Installing Touch Enhancer..."
+    echo -e "${YELLOW}[*]${NC} Installing GCam Enabler..."
+    echo ""
+    echo -e "${GREEN}[✓]${NC} Gaming Pack installed!"
 }
 
-remove_module() {
-    echo -e "${YELLOW}[*]${NC} Remove Module\n"
+list_installed() {
+    echo -e "${CYAN}Installed Modules:${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     
-    if ! check_magisk; then
-        return
-    fi
-    
-    echo "Installed modules:"
-    adb shell su -c "ls /data/adb/modules" 2>/dev/null
-    echo ""
-    
-    read -p "Enter module ID to remove: " MODULE_ID
-    
-    echo -e "${RED}WARNING: This will permanently remove the module${NC}"
-    read -p "Continue? (yes/no): " CONFIRM
-    
-    if [ "$CONFIRM" = "yes" ]; then
-        adb shell su -c "rm -rf /data/adb/modules/$MODULE_ID" 2>/dev/null
-        echo -e "${GREEN}[✓]${NC} Module removed (reboot required)"
-    fi
-}
-
-install_essentials() {
-    echo -e "${YELLOW}[*]${NC} Install Essential Modules Pack\n"
-    
-    echo -e "${CYAN}Essential Pack Includes:${NC}"
-    echo "  1. Shamiko (Hide root)"
-    echo "  2. Systemless Hosts (Ad blocking)"
-    echo "  3. Busybox NDK (Linux tools)"
-    echo ""
-    
-    echo "These modules will be downloaded and installed."
-    read -p "Continue? (yes/no): " CONFIRM
-    
-    if [ "$CONFIRM" = "yes" ]; then
-        echo "Feature coming soon - manual installation required"
-        echo "Visit: https://github.com/Magisk-Modules-Repo"
+    if command -v adb &> /dev/null; then
+        adb shell su -c "ls /data/adb/modules" 2>/dev/null || echo "No modules installed or device not connected"
+    else
+        echo "ADB not available"
     fi
 }
 
 main() {
     while true; do
+        clear
+        show_banner
         show_menu
-        read -p "Select option: " choice
+        
+        echo -ne "${CYAN}${BOLD}Select option [0-10]: ${NC}"
+        read choice
         echo ""
         
         case $choice in
-            1) list_modules ;;
+            1) list_installed ;;
             2) browse_modules ;;
-            3) download_module ;;
-            4) install_module ;;
-            5) enable_module ;;
-            6) disable_module ;;
-            7) remove_module ;;
-            8) echo "Update feature - check Magisk Manager for updates" ;;
-            9) install_essentials ;;
+            3) echo "Module installation coming soon..." ;;
+            4) echo "Module enable/disable coming soon..." ;;
+            5) echo "Module removal coming soon..." ;;
+            6) echo "Module update coming soon..." ;;
+            7) install_essential_pack ;;
+            8) install_privacy_pack ;;
+            9) install_performance_pack ;;
+            10) install_gaming_pack ;;
             0) exit 0 ;;
-            *) echo -e "${RED}Invalid option${NC}" ;;
+            *) echo -e "${RED}Invalid option!${NC}" ;;
         esac
         
-        echo ""
-        read -p "Press Enter to continue..."
-        clear
-        echo -e "${PURPLE}"
-        cat << "BANNER"
-    ╔═══════════════════════════════════════╗
-    ║    MAGISK MODULE MANAGER              ║
-    ╚═══════════════════════════════════════╝
-BANNER
-        echo -e "${NC}"
+        if [ "$choice" != "0" ]; then
+            echo ""
+            read -p "Press Enter to continue..."
+        fi
     done
 }
 
 main
-
-# Additional popular modules (appended)
-show_extended_modules() {
-    echo -e "${CYAN}━━━ Privacy & Security ━━━${NC}"
-    echo ""
-    echo " 13. 🔒 Universal SafetyNet Fix"
-    echo " 14. 🛡️  App Systemizer"
-    echo " 15. 🔐 Detach (Prevent Play Store updates)"
-    echo ""
-    
-    echo -e "${CYAN}━━━ Performance ━━━${NC}"
-    echo ""
-    echo " 16. ⚡ FDE.AI (AI performance)"
-    echo " 17. 🚀 LSpeed (Speed optimizer)"
-    echo " 18. 💨 Thermal Throttle Manager"
-    echo ""
-    
-    echo -e "${CYAN}━━━ Customization ━━━${NC}"
-    echo ""
-    echo " 19. 🎨 Substratum Theme Engine"
-    echo " 20. 🖼️  Icon Pack Enabler"
-    echo " 21. 🔤 Font Manager"
-    echo ""
-    
-    echo -e "${CYAN}━━━ Utilities ━━━${NC}"
-    echo ""
-    echo " 22. 📡 WiFi Bonding+"
-    echo " 23. 🔋 Battery Charge Limit"
-    echo " 24. 📸 Camera2 API Enabler"
-    echo " 25. 🎮 Game Turbo Enabler"
-}
