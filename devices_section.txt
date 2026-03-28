@@ -1,0 +1,27 @@
+### Samsung (4 devices)
+- Galaxy S10 (beyond1lte/beyond0lte/beyond2lte)
+- Galaxy S20 (x1s)
+- Galaxy S21 (o1s)
+- Galaxy S22 (r0s) ⭐ NEW
+
+### Google Pixel (4 devices)
+- Pixel 4a (sunfish)
+- Pixel 5 (redfin)
+- Pixel 6 (oriole)
+- Pixel 7 (panther) ⭐ NEW
+
+### Xiaomi (4 devices)
+- Redmi Note 10 (mojito)
+- Poco F3 (alioth)
+- Mi 11 (venus)
+- Mi 12 (cupid) ⭐ NEW
+
+### OnePlus (3 devices)
+- 7 Pro (guacamole)
+- 8 (instantnoodle)
+- 9 Pro (lemonadep) ⭐ NEW
+
+### Motorola (1 device)
+- Moto G Power (sofia)
+
+**Total: 16 devices supported**

@@ -5,7 +5,7 @@
 ### Professional Android Rooting Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Devices](https://img.shields.io/badge/Devices-12-blue.svg)](#supported-devices)
+[![Devices](https://img.shields.io/badge/Devices-16-blue.svg)](#supported-devices)
 [![Features](https://img.shields.io/badge/Features-20-green.svg)](#features)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](#installation)
 
@@ -19,7 +19,7 @@
 
 ## 📱 What is n3xionroot?
 
-n3xionroot is a complete, automated Android rooting toolkit that makes rooting your device as simple as running a single command. With support for 12 popular devices and 20+ powerful features, it's the ultimate solution for Android enthusiasts, developers, and power users.
+n3xionroot is a complete, automated Android rooting toolkit that makes rooting your device as simple as running a single command. With support for 16 popular devices and 20+ powerful features, it's the ultimate solution for Android enthusiasts, developers, and power users.
 
 ### ✨ Why Choose n3xionroot?
 
@@ -87,7 +87,7 @@ n3xionroot is a complete, automated Android rooting toolkit that makes rooting y
 ### Motorola (1 device)
 - Moto G Power (sofia)
 
-**Total: 12 devices supported** | [Request a device](../../issues/new)
+**Total: 16 devices supported** | [Request a device](../../issues/new)
 
 ---
 
