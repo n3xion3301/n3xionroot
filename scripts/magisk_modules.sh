@@ -4,125 +4,309 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+PURPLE='\033[0;35m'
 NC='\033[0m'
 
-echo "========================================="
-echo "   n3xionroot - Magisk Module Manager"
-echo "========================================="
-echo ""
+clear
+echo -e "${PURPLE}"
+cat << "BANNER"
+    ╔═══════════════════════════════════════╗
+    ║    MAGISK MODULE MANAGER              ║
+    ╚═══════════════════════════════════════╝
+BANNER
+echo -e "${NC}"
+
+show_menu() {
+    echo -e "${BLUE}═══════════════════════════════════════${NC}"
+    echo -e "${GREEN}Magisk Module Management${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
+    
+    echo "  1) 📋 List Installed Modules"
+    echo "  2) 🔍 Browse Popular Modules"
+    echo "  3) 📥 Download Module"
+    echo "  4) 📦 Install Module"
+    echo "  5) ✅ Enable Module"
+    echo "  6) ❌ Disable Module"
+    echo "  7) 🗑️  Remove Module"
+    echo "  8) 🔄 Update All Modules"
+    echo "  9) 🛡️  Install Essential Modules Pack"
+    echo "  0) 🔙 Back to Main Menu"
+    echo ""
+    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
+}
 
 check_magisk() {
-    echo -e "${YELLOW}[*]${NC} Checking Magisk installation..."
+    echo -e "${YELLOW}[*]${NC} Checking Magisk status...\n"
+    
+    if ! adb devices | grep -q "device$"; then
+        echo -e "${RED}[!]${NC} No device connected"
+        return 1
+    fi
     
     MAGISK_VER=$(adb shell su -c "magisk -v" 2>/dev/null | tr -d '\r')
+    
     if [ -z "$MAGISK_VER" ]; then
-        echo -e "${RED}[!]${NC} Magisk not installed"
-        exit 1
+        echo -e "${RED}[!]${NC} Magisk not installed or no root access"
+        return 1
     fi
     
     echo -e "${GREEN}[✓]${NC} Magisk version: $MAGISK_VER"
+    return 0
 }
 
-list_installed_modules() {
-    echo ""
-    echo -e "${YELLOW}[*]${NC} Installed Magisk modules..."
-    echo ""
+list_modules() {
+    echo -e "${YELLOW}[*]${NC} Installed Magisk Modules:\n"
     
-    adb shell su -c "ls /data/adb/modules" 2>/dev/null | while read module; do
-        if [ "$module" != "lost+found" ]; then
-            MODULE_NAME=$(adb shell su -c "cat /data/adb/modules/$module/module.prop 2>/dev/null | grep 'name=' | cut -d'=' -f2" | tr -d '\r')
-            MODULE_VER=$(adb shell su -c "cat /data/adb/modules/$module/module.prop 2>/dev/null | grep 'version=' | cut -d'=' -f2" | tr -d '\r')
-            
-            echo "  📦 $MODULE_NAME (v$MODULE_VER)"
-            echo "     ID: $module"
-            echo ""
-        fi
-    done
-}
-
-install_module() {
-    echo ""
-    echo -e "${BLUE}Popular Magisk Modules:${NC}"
-    echo "  - Universal SafetyNet Fix"
-    echo "  - Busybox for Android NDK"
-    echo "  - ViPER4Android FX"
-    echo "  - Systemless Hosts"
-    echo ""
-    
-    echo "Place module ZIP in current directory as 'module.zip'"
-    read -p "Press Enter when ready..."
-    
-    if [ ! -f "module.zip" ]; then
-        echo -e "${RED}[!]${NC} module.zip not found"
-        exit 1
-    fi
-    
-    echo -e "${YELLOW}[*]${NC} Installing module..."
-    adb push module.zip /sdcard/Download/
-    adb shell su -c "magisk --install-module /sdcard/Download/module.zip"
-    
-    echo -e "${GREEN}[✓]${NC} Module installed"
-    echo -e "${YELLOW}[!]${NC} Reboot required"
-    
-    read -p "Reboot now? (yes/no): " REBOOT
-    if [ "$REBOOT" = "yes" ]; then
-        adb reboot
-    fi
-}
-
-remove_module() {
-    echo ""
-    list_installed_modules
-    read -p "Enter module ID to remove: " MODULE_ID
-    
-    if [ -z "$MODULE_ID" ]; then
-        echo -e "${RED}[!]${NC} No module ID provided"
+    if ! check_magisk; then
         return
     fi
     
-    adb shell su -c "rm -rf /data/adb/modules/$MODULE_ID"
-    echo -e "${GREEN}[✓]${NC} Module removed (reboot required)"
+    echo -e "${CYAN}Active Modules:${NC}"
+    adb shell su -c "ls /data/adb/modules" 2>/dev/null | while read module; do
+        if [ -n "$module" ]; then
+            echo "  📦 $module"
+        fi
+    done
+    echo ""
 }
 
-toggle_module() {
+browse_modules() {
+    echo -e "${YELLOW}[*]${NC} Popular Magisk Modules:\n"
+    
+    echo -e "${CYAN}━━━ Essential Modules ━━━${NC}"
     echo ""
-    list_installed_modules
-    read -p "Enter module ID: " MODULE_ID
+    echo "  1. 🛡️  Shamiko (Hide Magisk)"
+    echo "     - Hide root from apps"
+    echo "     - Pass SafetyNet"
+    echo ""
+    echo "  2. 🎵 ViPER4Android FX"
+    echo "     - Audio enhancement"
+    echo "     - Equalizer & effects"
+    echo ""
+    echo "  3. 📶 WiFi Bonding"
+    echo "     - Improve WiFi performance"
+    echo "     - Better connectivity"
+    echo ""
+    echo "  4. 🔋 Advanced Charging Controller"
+    echo "     - Battery health protection"
+    echo "     - Charging limits"
+    echo ""
+    echo "  5. 🎨 Systemless Hosts"
+    echo "     - Ad blocking"
+    echo "     - Privacy protection"
+    echo ""
+    echo "  6. 📱 Busybox for Android NDK"
+    echo "     - Essential Linux tools"
+    echo "     - Command line utilities"
+    echo ""
+    echo "  7. 🔊 Dolby Atmos"
+    echo "     - Enhanced audio"
+    echo "     - Surround sound"
+    echo ""
+    echo "  8. 📸 Google Camera Enabler"
+    echo "     - Enable GCam features"
+    echo "     - Better photos"
+    echo ""
     
-    DISABLED=$(adb shell su -c "[ -f /data/adb/modules/$MODULE_ID/disable ] && echo 'yes' || echo 'no'" | tr -d '\r')
+    echo -e "${CYAN}━━━ Advanced Modules ━━━${NC}"
+    echo ""
+    echo "  9. 🔐 LSPosed Framework"
+    echo "     - Xposed framework"
+    echo "     - Module support"
+    echo ""
+    echo " 10. 🚀 Zygisk - Next"
+    echo "     - Zygisk implementation"
+    echo "     - Module injection"
+    echo ""
+    echo " 11. 🎮 Game Optimizer"
+    echo "     - Boost gaming performance"
+    echo "     - Reduce lag"
+    echo ""
+    echo " 12. 📊 System Monitor"
+    echo "     - CPU/RAM monitoring"
+    echo "     - Performance stats"
+    echo ""
+}
+
+download_module() {
+    echo -e "${YELLOW}[*]${NC} Download Magisk Module\n"
     
-    if [ "$DISABLED" = "yes" ]; then
-        adb shell su -c "rm /data/adb/modules/$MODULE_ID/disable"
-        echo -e "${GREEN}[✓]${NC} Module enabled"
-    else
-        adb shell su -c "touch /data/adb/modules/$MODULE_ID/disable"
-        echo -e "${GREEN}[✓]${NC} Module disabled"
+    echo "Popular module repositories:"
+    echo "  1. Magisk Module Repository: https://github.com/Magisk-Modules-Repo"
+    echo "  2. XDA Forums: https://forum.xda-developers.com"
+    echo ""
+    
+    read -p "Enter module ZIP URL or path: " MODULE_PATH
+    
+    if [[ "$MODULE_PATH" == http* ]]; then
+        echo "Downloading..."
+        MODULE_NAME=$(basename "$MODULE_PATH")
+        wget -O "./modules/$MODULE_NAME" "$MODULE_PATH" 2>/dev/null || \
+        curl -L -o "./modules/$MODULE_NAME" "$MODULE_PATH" 2>/dev/null
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}[✓]${NC} Downloaded: $MODULE_NAME"
+        else
+            echo -e "${RED}[!]${NC} Download failed"
+        fi
+    fi
+}
+
+install_module() {
+    echo -e "${YELLOW}[*]${NC} Install Magisk Module\n"
+    
+    if ! check_magisk; then
+        return
     fi
     
-    echo -e "${YELLOW}[!]${NC} Reboot required"
+    mkdir -p ./modules
+    
+    echo "Available modules in ./modules/:"
+    ls -1 ./modules/*.zip 2>/dev/null || echo "  (none)"
+    echo ""
+    
+    read -p "Enter module ZIP filename: " MODULE_ZIP
+    
+    if [ ! -f "./modules/$MODULE_ZIP" ]; then
+        echo -e "${RED}[!]${NC} File not found"
+        return
+    fi
+    
+    echo "Pushing module to device..."
+    adb push "./modules/$MODULE_ZIP" /sdcard/Download/
+    
+    echo -e "${YELLOW}[!]${NC} Installation Methods:"
+    echo "  1. Via Magisk Manager (Recommended)"
+    echo "  2. Via Command Line"
+    echo ""
+    
+    read -p "Select method (1/2): " METHOD
+    
+    case $METHOD in
+        1)
+            echo ""
+            echo -e "${CYAN}Instructions:${NC}"
+            echo "  1. Open Magisk Manager app"
+            echo "  2. Tap 'Modules' tab"
+            echo "  3. Tap 'Install from storage'"
+            echo "  4. Select: $MODULE_ZIP"
+            echo "  5. Reboot when prompted"
+            ;;
+        2)
+            echo "Installing via command line..."
+            adb shell su -c "magisk --install-module /sdcard/Download/$MODULE_ZIP"
+            echo -e "${GREEN}[✓]${NC} Module installed"
+            echo -e "${YELLOW}[!]${NC} Reboot required"
+            ;;
+    esac
+}
+
+enable_module() {
+    echo -e "${YELLOW}[*]${NC} Enable Module\n"
+    
+    if ! check_magisk; then
+        return
+    fi
+    
+    echo "Installed modules:"
+    adb shell su -c "ls /data/adb/modules" 2>/dev/null
+    echo ""
+    
+    read -p "Enter module ID to enable: " MODULE_ID
+    
+    adb shell su -c "rm /data/adb/modules/$MODULE_ID/disable" 2>/dev/null
+    echo -e "${GREEN}[✓]${NC} Module enabled (reboot required)"
+}
+
+disable_module() {
+    echo -e "${YELLOW}[*]${NC} Disable Module\n"
+    
+    if ! check_magisk; then
+        return
+    fi
+    
+    echo "Installed modules:"
+    adb shell su -c "ls /data/adb/modules" 2>/dev/null
+    echo ""
+    
+    read -p "Enter module ID to disable: " MODULE_ID
+    
+    adb shell su -c "touch /data/adb/modules/$MODULE_ID/disable" 2>/dev/null
+    echo -e "${GREEN}[✓]${NC} Module disabled (reboot required)"
+}
+
+remove_module() {
+    echo -e "${YELLOW}[*]${NC} Remove Module\n"
+    
+    if ! check_magisk; then
+        return
+    fi
+    
+    echo "Installed modules:"
+    adb shell su -c "ls /data/adb/modules" 2>/dev/null
+    echo ""
+    
+    read -p "Enter module ID to remove: " MODULE_ID
+    
+    echo -e "${RED}WARNING: This will permanently remove the module${NC}"
+    read -p "Continue? (yes/no): " CONFIRM
+    
+    if [ "$CONFIRM" = "yes" ]; then
+        adb shell su -c "rm -rf /data/adb/modules/$MODULE_ID" 2>/dev/null
+        echo -e "${GREEN}[✓]${NC} Module removed (reboot required)"
+    fi
+}
+
+install_essentials() {
+    echo -e "${YELLOW}[*]${NC} Install Essential Modules Pack\n"
+    
+    echo -e "${CYAN}Essential Pack Includes:${NC}"
+    echo "  1. Shamiko (Hide root)"
+    echo "  2. Systemless Hosts (Ad blocking)"
+    echo "  3. Busybox NDK (Linux tools)"
+    echo ""
+    
+    echo "These modules will be downloaded and installed."
+    read -p "Continue? (yes/no): " CONFIRM
+    
+    if [ "$CONFIRM" = "yes" ]; then
+        echo "Feature coming soon - manual installation required"
+        echo "Visit: https://github.com/Magisk-Modules-Repo"
+    fi
 }
 
 main() {
-    check_magisk
-    
-    echo ""
-    echo -e "${BLUE}Module Manager Options:${NC}"
-    echo "  1) List installed modules"
-    echo "  2) Install module"
-    echo "  3) Remove module"
-    echo "  4) Enable/Disable module"
-    echo "  5) Exit"
-    echo ""
-    read -p "Select option (1-5): " OPTION
-    
-    case $OPTION in
-        1) list_installed_modules ;;
-        2) install_module ;;
-        3) remove_module ;;
-        4) toggle_module ;;
-        5) exit 0 ;;
-        *) echo -e "${RED}[!]${NC} Invalid option" ;;
-    esac
+    while true; do
+        show_menu
+        read -p "Select option: " choice
+        echo ""
+        
+        case $choice in
+            1) list_modules ;;
+            2) browse_modules ;;
+            3) download_module ;;
+            4) install_module ;;
+            5) enable_module ;;
+            6) disable_module ;;
+            7) remove_module ;;
+            8) echo "Update feature - check Magisk Manager for updates" ;;
+            9) install_essentials ;;
+            0) exit 0 ;;
+            *) echo -e "${RED}Invalid option${NC}" ;;
+        esac
+        
+        echo ""
+        read -p "Press Enter to continue..."
+        clear
+        echo -e "${PURPLE}"
+        cat << "BANNER"
+    ╔═══════════════════════════════════════╗
+    ║    MAGISK MODULE MANAGER              ║
+    ╚═══════════════════════════════════════╝
+BANNER
+        echo -e "${NC}"
+    done
 }
 
 main

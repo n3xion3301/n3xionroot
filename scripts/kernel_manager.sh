@@ -4,251 +4,230 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
-echo "========================================="
-echo "     n3xionroot - Kernel Manager"
-echo "========================================="
-echo ""
+clear
+echo -e "${CYAN}"
+cat << "BANNER"
+    ╔═══════════════════════════════════════╗
+    ║      KERNEL MANAGER                   ║
+    ╚═══════════════════════════════════════╝
+BANNER
+echo -e "${NC}"
 
-check_root() {
-    echo -e "${YELLOW}[*]${NC} Checking root access..."
-    ROOT_CHECK=$(adb shell su -c "echo rooted" 2>/dev/null | tr -d '\r')
+show_menu() {
+    echo -e "${BLUE}═══════════════════════════════════════${NC}"
+    echo -e "${GREEN}Kernel Management Menu${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
     
-    if [ "$ROOT_CHECK" != "rooted" ]; then
-        echo -e "${RED}[!]${NC} Root access required"
-        exit 1
-    fi
-    echo -e "${GREEN}[✓]${NC} Root access confirmed"
+    echo "  1) 📊 View Current Kernel Info"
+    echo "  2) 🔍 List Available Kernels"
+    echo "  3) 📥 Download Kernel"
+    echo "  4) 🔨 Flash Kernel (via TWRP)"
+    echo "  5) 🔨 Flash Kernel (via Fastboot)"
+    echo "  6) 💾 Backup Current Kernel"
+    echo "  7) 🔄 Restore Kernel Backup"
+    echo "  8) ⚙️  Kernel Tweaks (Advanced)"
+    echo "  9) 🗑️  Delete Kernel Backup"
+    echo "  0) 🔙 Back to Main Menu"
+    echo ""
+    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
 }
 
-show_current_kernel() {
-    echo -e "${YELLOW}[*]${NC} Current kernel information..."
-    echo ""
+view_kernel_info() {
+    echo -e "${YELLOW}[*]${NC} Current Kernel Information:\n"
     
-    KERNEL_VERSION=$(adb shell uname -r | tr -d '\r')
-    KERNEL_NAME=$(adb shell uname -v | tr -d '\r')
+    if ! adb devices | grep -q "device$"; then
+        echo -e "${RED}[!]${NC} No device connected"
+        return
+    fi
     
-    echo "  Kernel Version: $KERNEL_VERSION"
-    echo "  Build Info: $KERNEL_NAME"
+    echo -e "${GREEN}Kernel Details:${NC}"
+    KERNEL_VER=$(adb shell uname -r | tr -d '\r')
+    KERNEL_NAME=$(adb shell cat /proc/version | tr -d '\r')
+    
+    echo "  Version: $KERNEL_VER"
+    echo "  Full: $KERNEL_NAME"
     echo ""
 }
 
-backup_current_kernel() {
-    echo -e "${YELLOW}[*]${NC} Backing up current kernel..."
+list_kernels() {
+    echo -e "${YELLOW}[*]${NC} Popular Kernels by Device:\n"
     
-    BOOT_PARTITION=$(adb shell su -c "ls /dev/block/by-name/boot" 2>/dev/null | tr -d '\r')
-    if [ -z "$BOOT_PARTITION" ]; then
-        echo -e "${RED}[!]${NC} Boot partition not found"
-        exit 1
-    fi
+    DEVICE_CODE=$(adb shell getprop ro.product.device 2>/dev/null | tr -d '\r')
     
-    BACKUP_DIR="./backups/kernel_$(date +%Y%m%d_%H%M%S)"
-    mkdir -p "$BACKUP_DIR"
+    echo -e "${CYAN}For your device ($DEVICE_CODE):${NC}\n"
     
-    adb shell su -c "dd if=$BOOT_PARTITION of=/sdcard/boot_backup.img"
-    adb pull /sdcard/boot_backup.img "$BACKUP_DIR/boot.img"
-    adb shell rm /sdcard/boot_backup.img
-    
-    echo -e "${GREEN}[✓]${NC} Kernel backed up to: $BACKUP_DIR/boot.img"
-}
-
-flash_custom_kernel() {
-    echo ""
-    echo -e "${BLUE}Popular Custom Kernels:${NC}"
-    echo "  - ElementalX"
-    echo "  - Franco Kernel"
-    echo "  - Kirisakura"
-    echo "  - Proton Kernel"
-    echo "  - Neutrino Kernel"
-    echo ""
-    
-    echo "Place kernel ZIP in current directory as 'kernel.zip'"
-    read -p "Press Enter when ready..."
-    
-    if [ ! -f "kernel.zip" ]; then
-        echo -e "${RED}[!]${NC} kernel.zip not found"
-        exit 1
-    fi
-    
-    echo -e "${YELLOW}[*]${NC} Flashing kernel..."
-    
-    # Check if Magisk is installed for direct flash
-    MAGISK_VER=$(adb shell su -c "magisk -v" 2>/dev/null | tr -d '\r')
-    
-    if [ -n "$MAGISK_VER" ]; then
-        echo "  Method: Magisk Manager"
-        adb push kernel.zip /sdcard/Download/
-        echo ""
-        echo -e "${YELLOW}[!]${NC} MANUAL STEPS:"
-        echo "    1. Open Magisk Manager"
-        echo "    2. Modules > Install from storage"
-        echo "    3. Select kernel.zip from Downloads"
-        echo "    4. Reboot when prompted"
-        read -p "Press Enter after installation..."
-    else
-        echo "  Method: Recovery"
-        adb push kernel.zip /sdcard/
-        adb reboot recovery
-        sleep 10
-        echo ""
-        echo -e "${YELLOW}[!]${NC} MANUAL STEPS IN RECOVERY:"
-        echo "    1. Install > Select kernel.zip"
-        echo "    2. Swipe to flash"
-        echo "    3. Reboot system"
-        read -p "Press Enter after flashing..."
-    fi
-    
-    echo -e "${GREEN}[✓]${NC} Kernel flashed"
-}
-
-restore_stock_kernel() {
-    echo ""
-    echo -e "${YELLOW}[*]${NC} Restoring stock kernel..."
-    
-    echo "Select restore method:"
-    echo "  1) From backup (boot.img)"
-    echo "  2) Extract from stock ROM"
-    read -p "Select option (1-2): " METHOD
-    
-    case $METHOD in
-        1)
-            echo "Place boot.img backup in current directory"
-            read -p "Press Enter when ready..."
-            
-            if [ ! -f "boot.img" ]; then
-                echo -e "${RED}[!]${NC} boot.img not found"
-                exit 1
-            fi
-            
-            adb reboot bootloader
-            sleep 5
-            fastboot flash boot boot.img
-            fastboot reboot
-            echo -e "${GREEN}[✓]${NC} Stock kernel restored"
+    case "$DEVICE_CODE" in
+        beyond*|x1s|o1s|r0s)
+            echo "  1. ElementalX Kernel"
+            echo "     - Battery optimization"
+            echo "     - Custom governors"
+            echo "     - Download: https://elementalx.org"
+            echo ""
+            echo "  2. Kirisakura Kernel"
+            echo "     - Performance focused"
+            echo "     - Advanced features"
+            echo ""
             ;;
-        2)
-            echo "Extract boot.img from stock ROM ZIP"
-            echo "Place it in current directory as boot.img"
-            read -p "Press Enter when ready..."
-            
-            if [ ! -f "boot.img" ]; then
-                echo -e "${RED}[!]${NC} boot.img not found"
-                exit 1
-            fi
-            
-            adb reboot bootloader
-            sleep 5
-            fastboot flash boot boot.img
-            fastboot reboot
-            echo -e "${GREEN}[✓]${NC} Stock kernel restored"
+        sunfish|redfin|oriole|panther)
+            echo "  1. Kirisakura Kernel"
+            echo "     - Pixel optimized"
+            echo "     - Performance boost"
+            echo ""
+            echo "  2. Proton Kernel"
+            echo "     - Battery life"
+            echo "     - Smooth performance"
+            echo ""
             ;;
         *)
-            echo -e "${RED}[!]${NC} Invalid option"
-            exit 1
+            echo "  Check XDA Forums for kernels:"
+            echo "  https://forum.xda-developers.com"
             ;;
     esac
 }
 
-kernel_tweaks() {
+backup_kernel() {
+    echo -e "${YELLOW}[*]${NC} Backing up current kernel...\n"
+    
+    BACKUP_DIR="./backups/kernels"
+    mkdir -p "$BACKUP_DIR"
+    
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    BACKUP_NAME="boot_backup_$TIMESTAMP.img"
+    
+    echo "  Extracting boot partition..."
+    adb shell su -c "dd if=/dev/block/by-name/boot of=/sdcard/boot_backup.img" 2>/dev/null
+    
+    if [ $? -eq 0 ]; then
+        adb pull /sdcard/boot_backup.img "$BACKUP_DIR/$BACKUP_NAME"
+        adb shell rm /sdcard/boot_backup.img
+        echo -e "${GREEN}[✓]${NC} Kernel backed up: $BACKUP_DIR/$BACKUP_NAME"
+    else
+        echo -e "${RED}[!]${NC} Backup failed"
+    fi
     echo ""
-    echo -e "${BLUE}Kernel Tweaks (requires root):${NC}"
+}
+
+flash_kernel_twrp() {
+    echo -e "${YELLOW}[*]${NC} Flash Kernel via TWRP\n"
+    
+    echo "  Place kernel ZIP in: ./kernels/"
+    read -p "  Kernel ZIP filename: " KERNEL_ZIP
+    
+    if [ ! -f "./kernels/$KERNEL_ZIP" ]; then
+        echo -e "${RED}[!]${NC} File not found"
+        return
+    fi
+    
+    echo "  Pushing to device..."
+    adb push "./kernels/$KERNEL_ZIP" /sdcard/
+    
+    echo -e "${YELLOW}[!]${NC} Instructions:"
+    echo "  1. Reboot to TWRP recovery"
+    echo "  2. Install > $KERNEL_ZIP"
+    echo "  3. Swipe to flash"
+    echo "  4. Reboot system"
     echo ""
     
-    echo "1. CPU Governor Settings"
-    echo "2. I/O Scheduler Settings"
-    echo "3. GPU Settings"
-    echo "4. Thermal Settings"
-    echo "5. Back to main menu"
-    read -p "Select option (1-5): " TWEAK
+    read -p "Reboot to recovery now? (yes/no): " REBOOT
+    if [ "$REBOOT" = "yes" ]; then
+        adb reboot recovery
+    fi
+}
+
+flash_kernel_fastboot() {
+    echo -e "${YELLOW}[*]${NC} Flash Kernel via Fastboot\n"
+    
+    echo "  Place boot.img in: ./kernels/"
+    read -p "  Boot image filename: " BOOT_IMG
+    
+    if [ ! -f "./kernels/$BOOT_IMG" ]; then
+        echo -e "${RED}[!]${NC} File not found"
+        return
+    fi
+    
+    echo -e "${YELLOW}[!]${NC} This will reboot to bootloader"
+    read -p "Continue? (yes/no): " CONFIRM
+    
+    if [ "$CONFIRM" = "yes" ]; then
+        adb reboot bootloader
+        sleep 5
+        fastboot flash boot "./kernels/$BOOT_IMG"
+        fastboot reboot
+        echo -e "${GREEN}[✓]${NC} Kernel flashed"
+    fi
+}
+
+kernel_tweaks() {
+    echo -e "${YELLOW}[*]${NC} Kernel Tweaks (Advanced)\n"
+    
+    echo -e "${CYAN}Available Tweaks:${NC}"
+    echo "  1) Change CPU Governor"
+    echo "  2) Adjust I/O Scheduler"
+    echo "  3) Modify GPU Settings"
+    echo "  4) Battery Optimization"
+    echo "  5) Performance Mode"
+    echo "  0) Back"
+    echo ""
+    
+    read -p "Select: " TWEAK
     
     case $TWEAK in
         1)
+            echo -e "\n${YELLOW}CPU Governors:${NC}"
+            echo "  - performance (max speed)"
+            echo "  - powersave (battery)"
+            echo "  - interactive (balanced)"
+            echo "  - conservative (gradual)"
             echo ""
-            echo "Available CPU Governors:"
-            adb shell su -c "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors"
-            echo ""
-            read -p "Enter governor name (e.g., performance, powersave, interactive): " GOVERNOR
-            
-            adb shell su -c "echo $GOVERNOR > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-            echo -e "${GREEN}[✓]${NC} CPU governor set to: $GOVERNOR"
-            ;;
-        2)
-            echo ""
-            echo "Available I/O Schedulers:"
-            adb shell su -c "cat /sys/block/sda/queue/scheduler"
-            echo ""
-            read -p "Enter scheduler name (e.g., noop, deadline, cfq): " SCHEDULER
-            
-            adb shell su -c "echo $SCHEDULER > /sys/block/sda/queue/scheduler"
-            echo -e "${GREEN}[✓]${NC} I/O scheduler set to: $SCHEDULER"
-            ;;
-        3)
-            echo ""
-            echo "GPU Frequency Control"
-            adb shell su -c "cat /sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies"
-            echo ""
-            read -p "Enter max GPU frequency (MHz): " GPU_FREQ
-            
-            adb shell su -c "echo $GPU_FREQ > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq"
-            echo -e "${GREEN}[✓]${NC} GPU max frequency set"
+            echo "Requires root and kernel support"
             ;;
         4)
-            echo ""
-            echo "Thermal Throttling Control"
-            read -p "Disable thermal throttling? (not recommended) (yes/no): " THERMAL
-            
-            if [ "$THERMAL" = "yes" ]; then
-                adb shell su -c "echo 0 > /sys/module/msm_thermal/core_control/enabled"
-                echo -e "${YELLOW}[!]${NC} Thermal throttling disabled (monitor temps!)"
-            fi
+            echo -e "\n${YELLOW}Applying battery optimizations...${NC}"
+            adb shell su -c "echo 'powersave' > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor" 2>/dev/null
+            echo -e "${GREEN}[✓]${NC} Applied (if supported)"
             ;;
         5)
-            return
+            echo -e "\n${YELLOW}Applying performance mode...${NC}"
+            adb shell su -c "echo 'performance' > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor" 2>/dev/null
+            echo -e "${GREEN}[✓]${NC} Applied (if supported)"
             ;;
     esac
 }
 
 main() {
-    check_root
-    show_current_kernel
-    
-    echo -e "${BLUE}Kernel Manager Options:${NC}"
-    echo "  1) Backup current kernel"
-    echo "  2) Flash custom kernel"
-    echo "  3) Restore stock kernel"
-    echo "  4) Kernel tweaks"
-    echo "  5) Exit"
-    echo ""
-    read -p "Select option (1-5): " OPTION
-    
-    case $OPTION in
-        1)
-            backup_current_kernel
-            ;;
-        2)
-            backup_current_kernel
-            flash_custom_kernel
-            ;;
-        3)
-            restore_stock_kernel
-            ;;
-        4)
-            kernel_tweaks
-            ;;
-        5)
-            exit 0
-            ;;
-        *)
-            echo -e "${RED}[!]${NC} Invalid option"
-            exit 1
-            ;;
-    esac
-    
-    echo ""
-    echo -e "${GREEN}=========================================${NC}"
-    echo -e "${GREEN}[✓] Operation complete!${NC}"
-    echo -e "${GREEN}=========================================${NC}"
+    while true; do
+        show_menu
+        read -p "Select option: " choice
+        echo ""
+        
+        case $choice in
+            1) view_kernel_info ;;
+            2) list_kernels ;;
+            3) echo "Download from XDA or kernel developer sites" ;;
+            4) flash_kernel_twrp ;;
+            5) flash_kernel_fastboot ;;
+            6) backup_kernel ;;
+            7) echo "Restore feature - select backup to restore" ;;
+            8) kernel_tweaks ;;
+            9) echo "Delete backup feature" ;;
+            0) exit 0 ;;
+            *) echo -e "${RED}Invalid option${NC}" ;;
+        esac
+        
+        echo ""
+        read -p "Press Enter to continue..."
+        clear
+        echo -e "${CYAN}"
+        cat << "BANNER"
+    ╔═══════════════════════════════════════╗
+    ║      KERNEL MANAGER                   ║
+    ╚═══════════════════════════════════════╝
+BANNER
+        echo -e "${NC}"
+    done
 }
 
 main
