@@ -6,171 +6,114 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+BOLD='\033[1m'
 NC='\033[0m'
 
-clear
-printf "${PURPLE}"
-cat << "BANNER"
-    ███╗   ██╗██████╗ ██╗  ██╗██╗ ██████╗ ███╗   ██╗
-    ████╗  ██║╚════██╗╚██╗██╔╝██║██╔═══██╗████╗  ██║
-    ██╔██╗ ██║ █████╔╝ ╚███╔╝ ██║██║   ██║██╔██╗ ██║
-    ██║╚██╗██║ ╚═══██╗ ██╔██╗ ██║██║   ██║██║╚██╗██║
-    ██║ ╚████║██████╔╝██╔╝ ██╗██║╚██████╔╝██║ ╚████║
-    ╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-                    ROOT TOOLKIT
-BANNER
-printf "${NC}\n"
-printf "${CYAN}        Android Rooting Made Easy${NC}\n\n"
+show_banner() {
+    clear
+    echo -e "${CYAN}${BOLD}"
+    echo "    ███╗   ██╗██████╗ ██╗  ██╗██╗ ██████╗ ███╗   ██╗"
+    echo "    ████╗  ██║╚════██╗╚██╗██╔╝██║██╔═══██╗████╗  ██║"
+    echo "    ██╔██╗ ██║ █████╔╝ ╚███╔╝ ██║██║   ██║██╔██╗ ██║"
+    echo "    ██║╚██╗██║ ╚═══██╗ ██╔██╗ ██║██║   ██║██║╚██╗██║"
+    echo "    ██║ ╚████║██████╔╝██╔╝ ██╗██║╚██████╔╝██║ ╚████║"
+    echo "    ╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
+    echo -e "${NC}"
+    echo -e "${PURPLE}${BOLD}              🔓 ROOT TOOLKIT v2.0 🔓${NC}"
+    echo -e "${WHITE}          Android Rooting Made Easy${NC}"
+    echo ""
+    echo -e "${PURPLE}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${PURPLE}║${NC}  ${CYAN}📱 22 Devices${NC}  │  ${CYAN}📦 25+ Modules${NC}  │  ${CYAN}🎯 20 Features${NC}  ${PURPLE}║${NC}"
+    echo -e "${PURPLE}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
 
 show_menu() {
-    printf "${BLUE}═══════════════════════════════════════${NC}\n"
-    printf "${GREEN}Main Menu${NC}\n"
-    printf "${BLUE}═══════════════════════════════════════${NC}\n\n"
+    echo -e "${YELLOW}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${YELLOW}║${NC}                    ${BOLD}${WHITE}MAIN MENU${NC}                            ${YELLOW}║${NC}"
+    echo -e "${YELLOW}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
     
-    printf "  ${YELLOW}Quick Actions:${NC}\n"
-    printf "    1) 🚀 On-The-Go Root (Auto-detect & Root)\n"
-    printf "    2) 📱 Device Info\n\n"
+    echo -e "${CYAN}⚡ Quick Actions${NC}"
+    echo -e "  ${GREEN}1)${NC} 🚀 On-The-Go Root          ${BLUE}(Auto-detect & Root)${NC}"
+    echo -e "  ${GREEN}2)${NC} 📱 Device Info             ${BLUE}(View device details)${NC}"
+    echo ""
     
-    printf "  ${YELLOW}Root Management:${NC}\n"
-    printf "    3) ✅ Root Device (Manual)\n"
-    printf "    4) ❌ Unroot Device\n"
-    printf "    5) 🔍 Verify Root Status\n\n"
+    echo -e "${CYAN}🔐 Root Management${NC}"
+    echo -e "  ${GREEN}3)${NC} ✅ Root Device             ${BLUE}(Manual rooting)${NC}"
+    echo -e "  ${GREEN}4)${NC} ❌ Unroot Device           ${BLUE}(Remove root)${NC}"
+    echo -e "  ${GREEN}5)${NC} 🔍 Verify Root Status      ${BLUE}(Check root)${NC}"
+    echo ""
     
-    printf "  ${YELLOW}System Tools:${NC}\n"
-    printf "    6) 💾 Backup Device\n"
-    printf "    7) ☁️  Cloud Backup Manager\n"
-    printf "    8) 🔄 Flash Custom ROM\n"
-    printf "    9) 💡 ROM Recommender\n"
-    printf "   10) ⚙️  Kernel Manager\n"
-    printf "   11) 🔧 Custom Kernel Installer\n"
-    printf "   12) 📦 Magisk Modules\n\n"
+    echo -e "${CYAN}🛠️  System Tools${NC}"
+    echo -e "  ${GREEN}6)${NC} 💾 Backup Device           ${BLUE}(Full backup)${NC}"
+    echo -e "  ${GREEN}7)${NC} ☁️  Cloud Backup Manager    ${BLUE}(Drive/Dropbox/OneDrive)${NC}"
+    echo -e "  ${GREEN}8)${NC} 🔄 Flash Custom ROM        ${BLUE}(Install ROM)${NC}"
+    echo -e "  ${GREEN}9)${NC} 💡 ROM Recommender         ${BLUE}(Smart suggestions)${NC}"
+    echo -e " ${GREEN}10)${NC} ⚙️  Kernel Manager          ${BLUE}(Manage kernels)${NC}"
+    echo -e " ${GREEN}11)${NC} 🔧 Custom Kernel Installer ${BLUE}(Flash kernels)${NC}"
+    echo -e " ${GREEN}12)${NC} 📦 Magisk Modules          ${BLUE}(25+ modules)${NC}"
+    echo ""
     
-    printf "  ${YELLOW}Downloads & Installation:${NC}\n"
-    printf "   13) 📥 Download Recovery Image\n"
-    printf "   14) 🔨 Auto Install TWRP\n"
-    printf "   15) 📥 Download Stock Firmware\n"
-    printf "   16) 🔧 Install ADB/Fastboot\n\n"
+    echo -e "${CYAN}📥 Downloads & Installation${NC}"
+    echo -e " ${GREEN}13)${NC} 📥 Download Recovery       ${BLUE}(TWRP/OrangeFox)${NC}"
+    echo -e " ${GREEN}14)${NC} 🔨 Auto Install TWRP       ${BLUE}(One-click)${NC}"
+    echo -e " ${GREEN}15)${NC} 📥 Download Firmware       ${BLUE}(Stock firmware)${NC}"
+    echo -e " ${GREEN}16)${NC} 🔧 Install ADB/Fastboot    ${BLUE}(Platform tools)${NC}"
+    echo ""
     
-    printf "  ${YELLOW}Advanced:${NC}\n"
-    printf "   17) 🚫 Block OTA Updates\n"
-    printf "   18) ✔️  Unblock OTA Updates\n"
-    printf "   19) 🛡️  Install SafetyNet Fix\n"
-    printf "   20) 📚 View Documentation\n\n"
+    echo -e "${CYAN}🔬 Advanced${NC}"
+    echo -e " ${GREEN}17)${NC} 🚫 Block OTA Updates       ${BLUE}(Prevent updates)${NC}"
+    echo -e " ${GREEN}18)${NC} ✔️  Unblock OTA Updates     ${BLUE}(Allow updates)${NC}"
+    echo -e " ${GREEN}19)${NC} 🛡️  SafetyNet Fix           ${BLUE}(4 methods)${NC}"
+    echo -e " ${GREEN}20)${NC} 📚 Documentation           ${BLUE}(View guides)${NC}"
+    echo ""
     
-    printf "   0) 🚪 Exit\n\n"
-    printf "${BLUE}═══════════════════════════════════════${NC}\n\n"
-}
-
-device_info() {
-    printf "${YELLOW}[*]${NC} Fetching device information...\n\n"
-    
-    if ! adb devices | grep -q "device$"; then
-        printf "${RED}[!]${NC} No device connected\n"
-        return
-    fi
-    
-    printf "${GREEN}Device Information:${NC}\n"
-    printf "  Manufacturer: $(adb shell getprop ro.product.manufacturer | tr -d '\r')\n"
-    printf "  Model: $(adb shell getprop ro.product.model | tr -d '\r')\n"
-    printf "  Device: $(adb shell getprop ro.product.device | tr -d '\r')\n"
-    printf "  Android: $(adb shell getprop ro.build.version.release | tr -d '\r')\n"
-    printf "  Build: $(adb shell getprop ro.build.id | tr -d '\r')\n"
-    printf "  Security Patch: $(adb shell getprop ro.build.version.security_patch | tr -d '\r')\n"
-    printf "  Bootloader: $(adb shell getprop ro.bootloader | tr -d '\r')\n\n"
-    
-    ROOT_CHECK=$(adb shell su -c "echo rooted" 2>/dev/null | tr -d '\r')
-    if [ "$ROOT_CHECK" = "rooted" ]; then
-        printf "  Root Status: ${GREEN}✓ ROOTED${NC}\n"
-        MAGISK_VER=$(adb shell su -c "magisk -v" 2>/dev/null | tr -d '\r')
-        if [ -n "$MAGISK_VER" ]; then
-            printf "  Magisk: v$MAGISK_VER\n"
-        fi
-    else
-        printf "  Root Status: ${RED}✗ NOT ROOTED${NC}\n"
-    fi
-    printf "\n"
-}
-
-verify_root() {
-    printf "${YELLOW}[*]${NC} Checking root status...\n"
-    
-    if ! adb devices | grep -q "device$"; then
-        printf "${RED}[!]${NC} No device connected\n"
-        return
-    fi
-    
-    ROOT_CHECK=$(adb shell su -c "echo rooted" 2>/dev/null | tr -d '\r')
-    
-    if [ "$ROOT_CHECK" = "rooted" ]; then
-        printf "${GREEN}[✓]${NC} Device is rooted!\n"
-        MAGISK_VER=$(adb shell su -c "magisk -v" 2>/dev/null | tr -d '\r')
-        if [ -n "$MAGISK_VER" ]; then
-            printf "    Magisk version: $MAGISK_VER\n\n"
-        fi
-    else
-        printf "${RED}[✗]${NC} Device is not rooted\n"
-    fi
-    printf "\n"
-}
-
-view_docs() {
-    printf "\n${BLUE}Documentation:${NC}\n\n"
-    printf "  📖 Supported Devices: docs/supported-devices.md\n"
-    printf "  📖 Installation Guide: docs/installation-guide.md\n"
-    printf "  📖 Troubleshooting: docs/troubleshooting.md\n\n"
-    printf "  🌐 Online Resources:\n"
-    printf "     - XDA Developers: https://forum.xda-developers.com\n"
-    printf "     - Magisk: https://github.com/topjohnwu/Magisk\n"
-    printf "     - TWRP: https://twrp.me\n\n"
+    echo -e "  ${RED}0)${NC} 🚪 Exit"
+    echo ""
+    echo -e "${YELLOW}════════════════════════════════════════════════════════════${NC}"
+    echo ""
 }
 
 main() {
     while true; do
+        show_banner
         show_menu
-        read -p "Select option: " choice
-        printf "\n"
+        
+        echo -ne "${CYAN}${BOLD}Select [0-20]: ${NC}"
+        read choice
+        echo ""
         
         case $choice in
-            1) cd scripts && ./otg_root.sh && cd .. ;;
-            2) device_info ;;
-            3) cd scripts && ./root_device.sh && cd .. ;;
-            4) cd scripts && ./unroot_device.sh && cd .. ;;
-            5) verify_root ;;
-            6) cd scripts && ./backup_device.sh && cd .. ;;
-            7) cd scripts && ./cloud_backup.sh && cd .. ;;
-            8) cd scripts && ./flash_rom.sh && cd .. ;;
-            9) cd scripts && ./rom_recommender.sh && cd .. ;;
-            10) cd scripts && ./kernel_manager.sh && cd .. ;;
-            11) cd scripts && ./custom_kernel_installer.sh && cd .. ;;
-            12) cd scripts && ./magisk_modules.sh && cd .. ;;
-            13) cd scripts && ./download_recovery.sh && cd .. ;;
-            14) cd scripts && ./auto_install_twrp.sh && cd .. ;;
-            15) cd scripts && ./download_firmware.sh && cd .. ;;
-            16) cd scripts && ./install_adb_fastboot.sh && cd .. ;;
-            17) cd scripts && ./block_ota.sh && cd .. ;;
-            18) cd scripts && ./unblock_ota.sh && cd .. ;;
-            19) cd scripts && ./install_safetynet_fix.sh && cd .. ;;
-            20) view_docs ;;
-            0) printf "${GREEN}Goodbye!${NC}\n"; exit 0 ;;
-            *) printf "${RED}Invalid option${NC}\n" ;;
+            1) bash scripts/otg_root.sh ;;
+            2) bash scripts/root_device.sh --info-only ;;
+            3) bash scripts/root_device.sh ;;
+            4) bash scripts/unroot_device.sh ;;
+            5) bash scripts/root_device.sh --verify-only ;;
+            6) bash scripts/backup_device.sh ;;
+            7) bash scripts/cloud_backup.sh ;;
+            8) bash scripts/flash_rom.sh ;;
+            9) bash scripts/rom_recommender.sh ;;
+            10) bash scripts/kernel_manager.sh ;;
+            11) bash scripts/custom_kernel_installer.sh ;;
+            12) bash scripts/magisk_modules.sh ;;
+            13) bash scripts/download_recovery.sh ;;
+            14) bash scripts/auto_install_twrp.sh ;;
+            15) bash scripts/download_firmware.sh ;;
+            16) bash scripts/install_adb_fastboot.sh ;;
+            17) bash scripts/block_ota.sh ;;
+            18) bash scripts/unblock_ota.sh ;;
+            19) bash scripts/install_safetynet_fix.sh ;;
+            20) cat docs/README.md 2>/dev/null || echo "Docs: github.com/n3xion3301/n3xionroot" ;;
+            0) echo -e "${GREEN}Thanks for using n3xionroot! 👋${NC}"; exit 0 ;;
+            *) echo -e "${RED}Invalid option!${NC}"; sleep 1 ;;
         esac
         
-        printf "\n"
-        read -p "Press Enter to continue..."
-        clear
-        
-        printf "${PURPLE}"
-        cat << "BANNER"
-    ███╗   ██╗██████╗ ██╗  ██╗██╗ ██████╗ ███╗   ██╗
-    ████╗  ██║╚════██╗╚██╗██╔╝██║██╔═══██╗████╗  ██║
-    ██╔██╗ ██║ █████╔╝ ╚███╔╝ ██║██║   ██║██╔██╗ ██║
-    ██║╚██╗██║ ╚═══██╗ ██╔██╗ ██║██║   ██║██║╚██╗██║
-    ██║ ╚████║██████╔╝██╔╝ ██╗██║╚██████╔╝██║ ╚████║
-    ╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-                    ROOT TOOLKIT
-BANNER
-        printf "${NC}\n"
-        printf "${CYAN}        Android Rooting Made Easy${NC}\n\n"
+        if [ "$choice" != "0" ]; then
+            echo ""
+            read -p "Press Enter to continue..."
+        fi
     done
 }
 
