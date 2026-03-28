@@ -310,3 +310,34 @@ BANNER
 }
 
 main
+
+# Additional popular modules (appended)
+show_extended_modules() {
+    echo -e "${CYAN}━━━ Privacy & Security ━━━${NC}"
+    echo ""
+    echo " 13. 🔒 Universal SafetyNet Fix"
+    echo " 14. 🛡️  App Systemizer"
+    echo " 15. 🔐 Detach (Prevent Play Store updates)"
+    echo ""
+    
+    echo -e "${CYAN}━━━ Performance ━━━${NC}"
+    echo ""
+    echo " 16. ⚡ FDE.AI (AI performance)"
+    echo " 17. 🚀 LSpeed (Speed optimizer)"
+    echo " 18. 💨 Thermal Throttle Manager"
+    echo ""
+    
+    echo -e "${CYAN}━━━ Customization ━━━${NC}"
+    echo ""
+    echo " 19. 🎨 Substratum Theme Engine"
+    echo " 20. 🖼️  Icon Pack Enabler"
+    echo " 21. 🔤 Font Manager"
+    echo ""
+    
+    echo -e "${CYAN}━━━ Utilities ━━━${NC}"
+    echo ""
+    echo " 22. 📡 WiFi Bonding+"
+    echo " 23. 🔋 Battery Charge Limit"
+    echo " 24. 📸 Camera2 API Enabler"
+    echo " 25. 🎮 Game Turbo Enabler"
+}
